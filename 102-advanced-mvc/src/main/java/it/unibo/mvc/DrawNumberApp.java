@@ -23,7 +23,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
      * @param views
      *            the views to attach
      */
-    public DrawNumberApp(final DrawNumberView... views) {
+    public DrawNumberApp(final String configFile,final DrawNumberView... views) {
         /*
          * Side-effect proof
          */
@@ -32,7 +32,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
             view.setObserver(this);
             view.start();
         }
-        this.model = new DrawNumberImpl(MIN, MAX, ATTEMPTS);
+        final Configuration.Builder config = new Configuration.Builder();
     }
 
     @Override
@@ -75,7 +75,13 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
      * @throws FileNotFoundException if the configuration file cannot be fetched
      */
     public static void main() throws FileNotFoundException {
-        new DrawNumberApp(new DrawNumberViewImpl());
+        new DrawNumberApp(
+            "config.yml",
+            new DrawNumberViewImpl(),
+            new DrawNumberViewImpl(),
+            new PrintStreamView(System.out),
+            new PrintStreamView("output.log")
+        );
     }
 
 }

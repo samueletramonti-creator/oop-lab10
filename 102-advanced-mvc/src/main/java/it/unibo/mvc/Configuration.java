@@ -1,5 +1,7 @@
 package it.unibo.mvc;
 
+import java.io.IOException;
+
 /**
  * Encapsulates the concept of configuration.
  */
@@ -83,6 +85,11 @@ public final class Configuration {
          */
         public Builder() {
             // Default constructor
+            try {
+                new ReadFromFile();
+            } catch (Exception e) {
+                IO.println("Problem with read from file");
+            }
         }
 
         /**

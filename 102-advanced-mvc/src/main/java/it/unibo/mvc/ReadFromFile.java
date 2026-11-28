@@ -1,14 +1,11 @@
 package it.unibo.mvc;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 public class ReadFromFile {
@@ -23,9 +20,9 @@ public class ReadFromFile {
      * 
      * @throws FileNotFoundException
      */
-    public ReadFromFile() throws FileNotFoundException{
+    public ReadFromFile() throws FileNotFoundException, IOException{
         final var file = new FileInputStream(FILE_PATH);
-        this.input = new BufferedReader(new InputStreamReader(file));
+        this.input = new BufferedReader(new InputStreamReader(file, StandardCharsets.UTF_8));
         this.setValues();
     }
 
@@ -62,7 +59,25 @@ public class ReadFromFile {
      * @throws IOException
      */
     private void setValues() throws IOException{
-        final var lines = this.input.readAllLines();
-        final StringTokenizer st = new StringTokenizer(lines);
+        final var lines = this.input.lines().toList();
+        if (lines.isEmpty()) {
+            throw new IOException("File not found");
+        }
+        int i = 0;
+        for (String line : lines) {
+            StringTokenizer st = new StringTokenizer(line);
+            while (st.hasMoreTokens()) {
+                st.nextToken();
+                if (i == 0) {
+                    this.min = Integer.parseInt(st.nextToken());
+                } else if (i == 1) {
+                    this.max = Integer.parseInt(st.nextToken());
+                } else {
+                    this.attempts = Integer.parseInt(st.nextToken());
+                }
+                i++;
+            }
+        }
+        
     }
 }
